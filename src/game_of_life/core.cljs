@@ -5,13 +5,28 @@
 ;; -------------------------
 ;; Views
 
-;; ------- style ----------
+
+
+;(defn unit-repeater [create-unit unit-count]
+;  (loop [index 0 result ()]
+;    (if (>= index unit-count)
+;      result
+;      (let [unit (create-unit index)]
+;        (recur (inc index) (conj result unit)))
+;      )
+;    )
+;  )
+
+
 
 ;(def cell-dimension 50)
 ;(def cell-border 1)
 ;(defn calculate-row-height [cell-dimension, cell-border]
 ;
 ;  )
+
+
+;; ------- style ----------
 
 (def playground {
                  :background "red",
@@ -48,24 +63,28 @@
    {:id id, :style cell-style}
    ])
 
-(defn create-single-row [row-no cell-count]
+(defn cell-repeater [row-no cell-count]
+  (loop [index 0 result ()]
+    (if (>= index cell-count)
+      result
+      (let [id (generate-id row-no index)
+            cell (create-single-cell id)]
+        (recur (inc index) (conj result cell)))
+      )
+    )
+  )
+
+(defn create-row [row-no cell-count]
   [:div
    {:style row-style}
-   (loop [index 0 result ()]
-     (if (>= index cell-count)
-       result
-       (let [id (generate-id row-no index)
-             cell (create-single-cell id)]
-         (recur (inc index) (conj result cell)))
-       )
-     )
+   (cell-repeater row-no cell-count)
    ])
 
-(defn create-rows [row-count cell-count]
+(defn row-repeater [row-count cell-count]
   (loop [index 0 result ()]
     (if (>= index row-count)
       result
-      (let [row (create-single-row index cell-count)]
+      (let [row (create-row index cell-count)]
         (recur (inc index) (conj result row)))
       )
     )
@@ -74,7 +93,7 @@
 (defn home-page []
   [:div
    {:style playground}
-   (create-rows 10 10)
+   (row-repeater 10 10)
    ])
 
 
