@@ -1,7 +1,11 @@
 (ns game-of-life.core
   (:require
-    [reagent.core :as r]))
+    [reagent.core :as r]
+    [clojure.string :as str]
+    )
+  )
 
+(def split str/split)
 ;; -------------------------
 ;; Views
 
@@ -48,19 +52,28 @@
                  :background "green"
                  })
 
-;; --------- components -----------
-
-
-
-(defn log-random []
-  (println "a cell has been clicked"))
+;; --------- utils -----------
 
 (defn generate-id [row-no cell-no]
   (str "r" row-no "c" cell-no))
 
+(defn parse-id [id]
+  (let [cell-coordinate (rest (split id #"r|c"))]
+    (hash-map :row (first cell-coordinate), :cell (second cell-coordinate))
+    )
+  )
+
+(defn log-target []
+  (println (parse-id event.target.id))
+  )
+
+
+;; --------- components -----------
+
+
 (defn create-single-cell [id]
   [:div
-   {:id id, :style cell-style}
+   {:id id, :style cell-style, :on-click log-target}
    ])
 
 (defn cell-repeater [row-no cell-count]
