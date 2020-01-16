@@ -35,21 +35,40 @@
 
 ;; --------- components -----------
 
+
+
 (defn log-random []
   (println "a cell has been clicked"))
 
-(def single-cell [:div
-                  {:style cell-style :on-click log-random}
-                  ])
+(defn generate-id [row-no cell-no]
+  (str "r" row-no "c" cell-no))
 
-(defn create-single-row [cell-count]
+(defn create-single-cell [id]
+  [:div
+   {:id id, :style cell-style}
+   ])
+
+(defn create-single-row [row-no cell-count]
   [:div
    {:style row-style}
-   (repeat cell-count single-cell)
+   (loop [index 0 result ()]
+     (if (>= index cell-count)
+       result
+       (let [id (generate-id row-no index)
+             cell (create-single-cell id)]
+         (recur (inc index) (conj result cell)))
+       )
+     )
    ])
 
 (defn create-rows [row-count cell-count]
-  (repeat row-count (create-single-row cell-count))
+  (loop [index 0 result ()]
+    (if (>= index row-count)
+      result
+      (let [row (create-single-row index cell-count)]
+        (recur (inc index) (conj result row)))
+      )
+    )
   )
 
 (defn home-page []
