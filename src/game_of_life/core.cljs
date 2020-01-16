@@ -35,18 +35,28 @@
 
 ;; --------- components -----------
 
-(def single-cell [:div {:style cell-style}])
+(defn log-random []
+  (println "a cell has been clicked"))
+
+(def single-cell [:div
+                  {:style cell-style :on-click log-random}
+                  ])
 
 (defn create-single-row [cell-count]
-  [:div {:style row-style}
-   (repeat cell-count single-cell)])
+  [:div
+   {:style row-style}
+   (repeat cell-count single-cell)
+   ])
 
 (defn create-rows [row-count cell-count]
   (repeat row-count (create-single-row cell-count))
   )
 
 (defn home-page []
-  [:div {:style playground} (create-rows 10 10)])
+  [:div
+   {:style playground}
+   (create-rows 10 10)
+   ])
 
 
 
